@@ -1,6 +1,5 @@
 package de.fdserver;
 
-import com.mojang.authlib.GameProfile;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
 import org.bukkit.Bukkit;
@@ -15,11 +14,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 public class ColorsAPI extends JavaPlugin implements Listener {
 
@@ -61,8 +55,11 @@ public class ColorsAPI extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoinLate(PlayerJoinEvent e) {
+        setScoreboard(e.getPlayer());
+    }
+
+    public static void setScoreboard(Player p) {
         if (ACTIVE) {
-            Player p = e.getPlayer();
             for (Player p2 : Bukkit.getOnlinePlayers()) {
                 createTeam(p, p2.getScoreboard());
                 createTeam(p2, p.getScoreboard());
@@ -70,7 +67,7 @@ public class ColorsAPI extends JavaPlugin implements Listener {
         }
     }
 
-    private void createTeam(Player p, Scoreboard sb) {
+    private static void createTeam(Player p, Scoreboard sb) {
         Team t;
         if ((t = sb.getTeam(p.getName())) == null)
             t = sb.registerNewTeam(p.getName());
